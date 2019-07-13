@@ -1,0 +1,7 @@
+.DS_Store
+._*
+Thumbs.db
+[Dd]esktop.ini
+npm-debug.log*
+node_modules/
+.idea
