@@ -14,7 +14,7 @@ function getClassNames(el: DefaultTreeElement): string[] | null {
   return className ? className.split(/\s+/) : null
 }
 
-export function extractSelector(htmlString) {
+export function extract(htmlString) {
   const selectors = []
   const fragment = parseFragment(htmlString) as DefaultTreeDocumentFragment
   const retrieveClassNames = el => {
