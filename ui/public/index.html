@@ -18,13 +18,23 @@
 </head>
 <body>
 
-<h2>HTML</h2>
-<textarea id="html"></textarea>
+<section>
+  <h2 id="html-heading">HTML</h2>
+  <textarea id="html" aria-labelledby="html-heading"></textarea>
 
-<p><button id="button" type="button">Process</button></p>
+  <fieldset>
+    <legend>Options</legend>
+    <p><label>Ignore pattern for single class: <input id="ignore" type="text" value="^is-"></label></p>
+    <p><label><input id="reset" type="checkbox" checked>Add reset styles</label></p>
+  </fieldset>
 
-<h2>CSS</h2>
-<textarea id="css" readonly></textarea>
+  <p><button id="button" type="button">Process</button></p>
+</section>
+
+<section>
+  <h2 id="css-heading">CSS</h2>
+  <textarea id="css" readonly aria-labelledby="css-heading"></textarea>
+</section>
 
 </body>
 </html>
