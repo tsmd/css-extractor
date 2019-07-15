@@ -23,11 +23,15 @@ interface Selector {
   style: string | null
 }
 
+interface ExtractOptions {
+  ignorePatternForSingleClass?: RegExp
+}
+
 function isElement(el: any): el is DefaultTreeElement {
   return el.tagName && el.attrs
 }
 
-export function extract(htmlString: string) {
+export function extract(htmlString: string, options: ExtractOptions = {}) {
   const selectors: Selector[] = []
   const selectorFlag = new Map<string, boolean>()
 
@@ -58,6 +62,13 @@ export function extract(htmlString: string) {
     } else {
       for (let i = 1; i <= classNames.length; i += 1) {
         combination(classNames.length, i).forEach(index => {
+          if (
+            index.length === 1 &&
+            options.ignorePatternForSingleClass &&
+            options.ignorePatternForSingleClass.test(classNames[index[0]])
+          ) {
+            return
+          }
           const selector = index.map(cn => `.${classNames[cn]}`).join('')
           addSelector(selector, el)
           el.childNodes.forEach(el => retrieveClassNames(el, [selector]))

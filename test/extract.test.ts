@@ -107,3 +107,9 @@ test('17', () => {
   const output = extract(input)
   expect(output).toBe(format('.Hoge{}.Fuga{}'))
 })
+
+test('18', () => {
+  const input = '<div class="Hoge is-opened"></div>'
+  const output = extract(input, { ignorePatternForSingleClass: /^is-/ })
+  expect(output).toBe(format('.Hoge{}.Hoge.is-opened{}'))
+})
