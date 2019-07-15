@@ -6,12 +6,57 @@
   <style>
     html {
       box-sizing: border-box;
+      height: 100%;
+      background-color: #eee;
+      font-family: "Neue Helvetica", Helvetica, Arial, sans-serif;
+      line-height: 1.8;
+    }
+    *, *::before, *::after {
+      box-sizing: inherit;
+    }
+    body {
+      display: flex;
+      height: 100%;
+      margin: 0 4%;
+    }
+    section {
+      flex: 1 1 50%;
+      display: flex;
+      flex-direction: column;
+      padding: 2%;
+    }
+    h2 {
+      margin-top: 0;
+      margin-bottom: .3em;
+      font-size: 250%;
+      line-height: 1.2;
     }
     textarea {
       width: 100%;
-      height: 500px;
+      flex-grow: 1;
       padding: .5em;
       border: 1px solid #000;
+      font-family: monospace;
+      line-height: 1.5;
+      resize: none;
+    }
+    #css {
+      background-color: transparent;
+    }
+    fieldset {
+      flex-shrink: 0;
+    }
+    input {
+      font-family: monospace;
+    }
+    .process-button {
+      flex-shrink: 0;
+      margin-bottom: 0;
+      text-align: right;
+    }
+    .process-button button {
+      vertical-align: bottom;
+      font-size: 150%;
     }
   </style>
   <script src="index.bundle.js" defer></script>
@@ -19,7 +64,7 @@
 <body>
 
 <section>
-  <h2 id="html-heading">HTML</h2>
+  <h2 id="html-heading">Input HTML</h2>
   <textarea id="html" aria-labelledby="html-heading"></textarea>
 
   <fieldset>
@@ -28,11 +73,11 @@
     <p><label><input id="reset" type="checkbox" checked>Add reset styles</label></p>
   </fieldset>
 
-  <p><button id="button" type="button">Process</button></p>
+  <p class="process-button"><button id="button" type="button">Process</button></p>
 </section>
 
 <section>
-  <h2 id="css-heading">CSS</h2>
+  <h2 id="css-heading">Output CSS</h2>
   <textarea id="css" readonly aria-labelledby="css-heading"></textarea>
 </section>
 
