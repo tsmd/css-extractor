@@ -1,5 +1,8 @@
 {
+  "files": ["src/extract.ts"],
   "compilerOptions": {
+    "outDir": "dist",
+    "lib": ["es2015"],
     "target": "es5",
     "module": "commonjs",
     "esModuleInterop": true

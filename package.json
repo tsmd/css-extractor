@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "scripts": {
     "test": "jest",
-    "build": "tsc src/index.ts"
+    "build": "tsc"
   },
   "author": "Takayuki Shimada",
   "license": "MIT",
