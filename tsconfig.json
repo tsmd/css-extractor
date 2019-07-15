@@ -1,6 +1,7 @@
 {
   "files": ["src/extract.ts"],
   "compilerOptions": {
+    "declaration": true,
     "outDir": "dist",
     "lib": ["es2015"],
     "target": "es5",
