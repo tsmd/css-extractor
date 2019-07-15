@@ -1,5 +1,5 @@
-# CSS extractor
-Extract HTML into CSS declarations
+# CSS Scaffolder
+Scaffold CSS declarations from HTML
 
 ## License
 MIT
