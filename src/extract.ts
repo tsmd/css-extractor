@@ -1,6 +1,8 @@
 import { DefaultTreeDocumentFragment, DefaultTreeElement, DefaultTreeNode, parseFragment } from 'parse5'
 import { format } from 'prettier/standalone'
 import cssParser from 'prettier/parser-postcss'
+import _ from 'underscore'
+
 import { combination } from './utils'
 import { reset } from './reset'
 
@@ -25,7 +27,7 @@ interface Selector {
 }
 
 interface ExtractOptions {
-  ignorePatternForSingleClass?: RegExp
+  modifierPattern?: RegExp
   reset?: boolean
 }
 
@@ -33,7 +35,14 @@ function isElement(el: any): el is DefaultTreeElement {
   return el.tagName && el.attrs
 }
 
+const defaultOptions: ExtractOptions = {
+  modifierPattern: /$./,
+  reset: false
+}
+
 export function extract(htmlString: string, options: ExtractOptions = {}) {
+  options = Object.assign({}, defaultOptions, options)
+
   const selectors: Selector[] = []
   const selectorFlag = new Map<string, boolean>()
 
@@ -52,30 +61,42 @@ export function extract(htmlString: string, options: ExtractOptions = {}) {
     if (!isElement(el)) {
       return
     }
+
     const classNames = getClassNames(el)
-    if (!classNames && currentPath.length === 0) {
-      return
-    }
     if (!classNames) {
+      // クラス名を起点とする文脈に居るかどうかの判定
+      if (currentPath.length === 0) {
+        el.childNodes.forEach(el => retrieveClassNames(el))
+        return
+      }
+
       const path = currentPath.concat(el.tagName)
       const selector = path.join('>')
       addSelector(selector, el)
       el.childNodes.forEach(el => retrieveClassNames(el, path))
-    } else {
-      for (let i = 1; i <= classNames.length; i += 1) {
-        combination(classNames.length, i).forEach(index => {
-          if (
-            index.length === 1 &&
-            options.ignorePatternForSingleClass &&
-            options.ignorePatternForSingleClass.test(classNames[index[0]])
-          ) {
-            return
-          }
-          const selector = index.map(cn => `.${classNames[cn]}`).join('')
-          addSelector(selector, el)
-          el.childNodes.forEach(el => retrieveClassNames(el, [selector]))
-        })
-      }
+      return
+    }
+
+    const [modifiers, modifierExcluded] = _.partition(classNames, cn => options.modifierPattern.test(cn))
+    if (modifierExcluded.length === 0) {
+      el.childNodes.forEach(el => retrieveClassNames(el))
+      return
+    }
+
+    // モディファイア以外のクラス名は、組み合わせを列挙し
+    // それぞれについて子孫要素を見ていく
+    for (let i = 1; i <= modifierExcluded.length; i += 1) {
+      combination(modifierExcluded.length, i).forEach(index => {
+        const selector = index.map(cn => `.${modifierExcluded[cn]}`).join('')
+        addSelector(selector, el)
+        el.childNodes.forEach(el => retrieveClassNames(el, [selector]))
+
+        for (let j = 0; j < modifiers.length; j += 1) {
+          const selector2 = `${selector}.${modifiers[j]}`
+          addSelector(selector2, el)
+          el.childNodes.forEach(el => retrieveClassNames(el, [selector2]))
+        }
+      })
     }
   }
 

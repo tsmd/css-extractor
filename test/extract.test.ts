@@ -110,7 +110,7 @@ test('17', () => {
 
 test('18', () => {
   const input = '<div class="Hoge is-opened"></div>'
-  const output = extract(input, { ignorePatternForSingleClass: /^is-/ })
+  const output = extract(input, { modifierPattern: /^is-/ })
   expect(output).toBe(format('.Hoge{}.Hoge.is-opened{}'))
 })
 
@@ -128,4 +128,40 @@ test('20', () => {
       '.Hoge{}.Hoge__button{padding: 0; color: currentColor; background-color: transparent; border: 0; font: inherit; text-align: left; user-select: none;font-weight:bold;}'
     )
   )
+})
+
+test('21', () => {
+  const input = '<button class="Button -size-small -rounded"></button>'
+  const output = extract(input, { modifierPattern: /^-/ })
+  expect(output).toBe(format('.Button{}.Button.-size-small{}.Button.-rounded{}'))
+})
+
+test('22', () => {
+  const input = '<div class="Hoge Fuga -piyo -foo"><span></span></div>'
+  const output = extract(input, { modifierPattern: /^-/ })
+  expect(output).toBe(
+    format(
+      '.Hoge{}.Hoge>span{}' +
+        '.Hoge.-piyo{}.Hoge.-piyo>span{}' +
+        '.Hoge.-foo{}.Hoge.-foo>span{}' +
+        '.Fuga{}.Fuga>span{}' +
+        '.Fuga.-piyo{}.Fuga.-piyo>span{}' +
+        '.Fuga.-foo{}.Fuga.-foo>span{}' +
+        '.Hoge.Fuga{}.Hoge.Fuga>span{}' +
+        '.Hoge.Fuga.-piyo{}.Hoge.Fuga.-piyo>span{}' +
+        '.Hoge.Fuga.-foo{}.Hoge.Fuga.-foo>span{}'
+    )
+  )
+})
+
+test('23', () => {
+  const input = '<div class="-piyo"></div>'
+  const output = extract(input, { modifierPattern: /^-/ })
+  expect(output).toBe(format(''))
+})
+
+test('24', () => {
+  const input = '<div><div class="Hoge"><span></span></div></div>'
+  const output = extract(input)
+  expect(output).toBe(format('.Hoge{}.Hoge>span{}'))
 })
