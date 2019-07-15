@@ -1,5 +1,6 @@
 import { DefaultTreeDocumentFragment, DefaultTreeElement, DefaultTreeNode, parseFragment } from 'parse5'
-import { format } from 'prettier'
+import { format } from 'prettier/standalone'
+import cssParser from 'prettier/parser-postcss'
 import { combination } from './utils'
 
 function getAttribute(el: DefaultTreeElement, attrName: string): string | null {
@@ -69,5 +70,5 @@ export function extract(htmlString: string) {
   fragment.childNodes.forEach(el => retrieveClassNames(el))
 
   const css = selectors.map(selector => `${selector.selector} {${selector.style || ''}}`).join('\n\n')
-  return format(css, { parser: 'css' })
+  return format(css, { parser: 'css', plugins: [cssParser] })
 }
