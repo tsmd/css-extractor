@@ -90,19 +90,19 @@ test('14', () => {
   expect(output).toBe(format('.Hoge{}.Hoge>a{}'))
 })
 
-test('15',()=>{
+test('15', () => {
   const input = '<li><a></a></li>'
   const output = extract(input)
   expect(output).toBe('')
 })
 
-test('16',()=>{
+test('16', () => {
   const input = '<div class="Hoge"><div class="Fuga Piyo"></div></div>'
   const output = extract(input)
   expect(output).toBe(format('.Hoge{}.Fuga{}.Piyo{}.Fuga.Piyo{}'))
 })
 
-test('17',()=>{
+test('17', () => {
   const input = '<div class="Hoge"><div class="Fuga"></div>abc<!--dev-->ghi</div>'
   const output = extract(input)
   expect(output).toBe(format('.Hoge{}.Fuga{}'))
