@@ -8,8 +8,7 @@ $('#button').on('click', function() {
 
   const ignore = $('#ignore').val()
   if (ignore) {
-    options.ignorePatternForSingleClass = new RegExp(ignore)
-    console.log(options.ignorePatternForSingleClass)
+    options.modifierPattern = new RegExp(ignore)
   }
 
   const css = extract($('#html').val(), options)
