@@ -7,4 +7,4 @@ node_modules/
 .idea
 dist
 
-packages/ui/public/*.bundle.js
+ui/public/*.bundle.js
