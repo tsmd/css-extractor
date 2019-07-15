@@ -1,6 +1,7 @@
 {
   "name": "css-extractor",
   "version": "0.1.0",
+  "description": "Extract HTML into CSS declarations",
   "scripts": {
     "test": "jest",
     "build": "tsc",
