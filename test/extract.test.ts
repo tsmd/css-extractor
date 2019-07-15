@@ -113,3 +113,19 @@ test('18', () => {
   const output = extract(input, { ignorePatternForSingleClass: /^is-/ })
   expect(output).toBe(format('.Hoge{}.Hoge.is-opened{}'))
 })
+
+test('19', () => {
+  const input = '<div class="Hoge"><img src="" alt=""></div>'
+  const output = extract(input, { reset: true })
+  expect(output).toBe(format('.Hoge{}.Hoge>img{display:block;}'))
+})
+
+test('20', () => {
+  const input = '<div class="Hoge"><button class="Hoge__button" type="button" style="font-weight:bold">a</button></div>'
+  const output = extract(input, { reset: true })
+  expect(output).toBe(
+    format(
+      '.Hoge{}.Hoge__button{padding: 0; color: currentColor; background-color: transparent; border: 0; font: inherit; text-align: left; user-select: none;font-weight:bold;}'
+    )
+  )
+})
