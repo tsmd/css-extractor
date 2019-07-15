@@ -15,6 +15,21 @@ function getClassNames(el: DefaultTreeElement): string[] | null {
   return className ? className.split(/\s+/) : null
 }
 
+/** nCr */
+function combination(n, r, offset = 0) {
+  const combs = []
+  for (var i = 0; i <= n - r; i += 1) {
+    if (r === 1) {
+      combs.push([offset + i])
+    } else {
+      combination(n - i - 1, r - 1, offset + i + 1).forEach(result => {
+        combs.push([i + offset].concat(result))
+      })
+    }
+  }
+  return combs
+}
+
 export function extract(htmlString) {
   const selectors = []
   const fragment = parseFragment(htmlString) as DefaultTreeDocumentFragment
@@ -30,33 +45,7 @@ export function extract(htmlString) {
       el.childNodes.forEach(el => retrieveClassNames(el, currentPath.slice()))
       currentPath.pop()
     } else {
-      // TODO 組み合わせ動的生成
-      if (classNames.length === 2) {
-        currentPath.push(`.${classNames[0]}`)
-        selectors.push({
-          selector: currentPath.join('>'),
-          tagName: el.tagName,
-          style: getAttribute(el, 'style')
-        })
-        el.childNodes.forEach(el => retrieveClassNames(el, currentPath.slice()))
-        currentPath.pop()
-        currentPath.push(`.${classNames[1]}`)
-        selectors.push({
-          selector: currentPath.join('>'),
-          tagName: el.tagName,
-          style: getAttribute(el, 'style')
-        })
-        el.childNodes.forEach(el => retrieveClassNames(el, currentPath.slice()))
-        currentPath.pop()
-        currentPath.push(`.${classNames[0]}.${classNames[1]}`)
-        selectors.push({
-          selector: currentPath.join('>'),
-          tagName: el.tagName,
-          style: getAttribute(el, 'style')
-        })
-        el.childNodes.forEach(el => retrieveClassNames(el, currentPath.slice()))
-        currentPath.pop()
-      } else if (classNames.length === 1) {
+      if (classNames.length === 1) {
         currentPath = [`.${classNames[0]}`]
         selectors.push({
           selector: `.${classNames[0]}`,
@@ -65,7 +54,18 @@ export function extract(htmlString) {
         })
         el.childNodes.forEach(el => retrieveClassNames(el, currentPath.slice()))
       } else {
-        console.error('unsupported')
+        for (let i = 1; i <= classNames.length; i += 1) {
+          combination(classNames.length, i).forEach(hoge => {
+            currentPath.push(hoge.map(cn => `.${classNames[cn]}`).join(''))
+            selectors.push({
+              selector: currentPath.join('>'),
+              tagName: el.tagName,
+              style: getAttribute(el, 'style')
+            })
+            el.childNodes.forEach(el => retrieveClassNames(el, currentPath.slice()))
+            currentPath.pop()
+          })
+        }
       }
     }
   }
