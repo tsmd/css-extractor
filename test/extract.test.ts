@@ -101,3 +101,9 @@ test('16',()=>{
   const output = extract(input)
   expect(output).toBe(format('.Hoge{}.Fuga{}.Piyo{}.Fuga.Piyo{}'))
 })
+
+test('17',()=>{
+  const input = '<div class="Hoge"><div class="Fuga"></div>abc<!--dev-->ghi</div>'
+  const output = extract(input)
+  expect(output).toBe(format('.Hoge{}.Fuga{}'))
+})
