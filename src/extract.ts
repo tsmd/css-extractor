@@ -32,44 +32,43 @@ function combination(n, r, offset = 0) {
 
 export function extract(htmlString) {
   const selectors = []
-  const fragment = parseFragment(htmlString) as DefaultTreeDocumentFragment
-  const retrieveClassNames = (el, currentPath = []) => {
-    const classNames = getClassNames(el)
-    if (!classNames) {
-      currentPath.push(el.tagName)
+  const selectorFlag = {}
+
+  const addSelector = (selector, el) => {
+    if (!selectorFlag[selector]) {
+      selectorFlag[selector] = true
       selectors.push({
-        selector: currentPath.join('>'),
+        selector: selector,
         tagName: el.tagName,
         style: getAttribute(el, 'style')
       })
-      el.childNodes.forEach(el => retrieveClassNames(el, currentPath.slice()))
-      currentPath.pop()
+    }
+  }
+
+  const retrieveClassNames = (el, currentPath = []) => {
+    const classNames = getClassNames(el)
+    if (!classNames && currentPath.length === 0) {
+      return
+    }
+    if (!classNames) {
+      const path = currentPath.concat(el.tagName)
+      const selector = path.join('>')
+      addSelector(selector, el)
+      el.childNodes.forEach(el => retrieveClassNames(el, path))
     } else {
-      if (classNames.length === 1) {
-        currentPath = [`.${classNames[0]}`]
-        selectors.push({
-          selector: `.${classNames[0]}`,
-          tagName: el.tagName,
-          style: getAttribute(el, 'style')
+      for (let i = 1; i <= classNames.length; i += 1) {
+        combination(classNames.length, i).forEach(index => {
+          const selector = index.map(cn => `.${classNames[cn]}`).join('')
+          addSelector(selector, el)
+          el.childNodes.forEach(el => retrieveClassNames(el, [selector]))
         })
-        el.childNodes.forEach(el => retrieveClassNames(el, currentPath.slice()))
-      } else {
-        for (let i = 1; i <= classNames.length; i += 1) {
-          combination(classNames.length, i).forEach(hoge => {
-            currentPath.push(hoge.map(cn => `.${classNames[cn]}`).join(''))
-            selectors.push({
-              selector: currentPath.join('>'),
-              tagName: el.tagName,
-              style: getAttribute(el, 'style')
-            })
-            el.childNodes.forEach(el => retrieveClassNames(el, currentPath.slice()))
-            currentPath.pop()
-          })
-        }
       }
     }
   }
+
+  const fragment = parseFragment(htmlString) as DefaultTreeDocumentFragment
   fragment.childNodes.forEach(el => retrieveClassNames(el))
+
   const css = selectors.map(selector => `${selector.selector} {${selector.style || ''}}`).join('\n\n')
   return prettier.format(css, { parser: 'css' })
 }
