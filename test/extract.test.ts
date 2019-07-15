@@ -65,3 +65,39 @@ test('10', () => {
   const output = extract(input)
   expect(output).toBe(format('.Hoge{}.Hoge>a{}.Fuga{}.Fuga>a{}.Hoge.Fuga{}.Hoge.Fuga>a{}'))
 })
+
+test('11', () => {
+  const input = '<div class="Hoge"><div class="Hoge"></div></div>'
+  const output = extract(input)
+  expect(output).toBe(format('.Hoge{}'))
+})
+
+test('12', () => {
+  const input = '<div class="Hoge Fuga"><div class="Fuga"></div></div>'
+  const output = extract(input)
+  expect(output).toBe(format('.Hoge{}.Fuga{}.Hoge.Fuga{}'))
+})
+
+test('13', () => {
+  const input = '<div class="Hoge"><a><div class="Hoge"><a></a></div></a></div>'
+  const output = extract(input)
+  expect(output).toBe(format('.Hoge{}.Hoge>a{}'))
+})
+
+test('14', () => {
+  const input = '<div class="Hoge"><a></a></div><div class="Hoge"><a></a></div>'
+  const output = extract(input)
+  expect(output).toBe(format('.Hoge{}.Hoge>a{}'))
+})
+
+test('15',()=>{
+  const input = '<li><a></a></li>'
+  const output = extract(input)
+  expect(output).toBe('')
+})
+
+test('16',()=>{
+  const input = '<div class="Hoge"><div class="Fuga Piyo"></div></div>'
+  const output = extract(input)
+  expect(output).toBe(format('.Hoge{}.Fuga{}.Piyo{}.Fuga.Piyo{}'))
+})
