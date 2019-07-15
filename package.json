@@ -1,6 +1,6 @@
 {
   "name": "css-scaffolder",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Scaffold CSS declarations from HTML",
   "scripts": {
     "test": "jest",
