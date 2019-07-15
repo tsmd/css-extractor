@@ -1,4 +1,4 @@
-import { DefaultTreeDocumentFragment, DefaultTreeElement, parseFragment } from 'parse5'
+import { DefaultTreeDocumentFragment, DefaultTreeElement, DefaultTreeNode, parseFragment } from 'parse5'
 import { format } from 'prettier'
 import { combination } from './utils'
 
@@ -16,13 +16,23 @@ function getClassNames(el: DefaultTreeElement): string[] | null {
   return className ? className.split(/\s+/) : null
 }
 
-export function extract(htmlString) {
-  const selectors = []
-  const selectorFlag = {}
+interface Selector {
+  selector: string
+  tagName: string
+  style: string | null
+}
+
+function isElement(el: any): el is DefaultTreeElement {
+  return el.tagName && el.attrs
+}
+
+export function extract(htmlString: string) {
+  const selectors: Selector[] = []
+  const selectorFlag = new Map<string, boolean>()
 
   const addSelector = (selector, el) => {
-    if (!selectorFlag[selector]) {
-      selectorFlag[selector] = true
+    if (!selectorFlag.has(selector)) {
+      selectorFlag.set(selector, true)
       selectors.push({
         selector: selector,
         tagName: el.tagName,
@@ -31,7 +41,10 @@ export function extract(htmlString) {
     }
   }
 
-  const retrieveClassNames = (el, currentPath = []) => {
+  const retrieveClassNames = (el: DefaultTreeNode, currentPath: string[] = []) => {
+    if (!isElement(el)) {
+      return
+    }
     const classNames = getClassNames(el)
     if (!classNames && currentPath.length === 0) {
       return
