@@ -125,7 +125,7 @@ test('20', () => {
   const output = extract(input, { reset: true })
   expect(output).toBe(
     format(
-      '.Hoge{}.Hoge__button{padding: 0; color: currentColor; background-color: transparent; border: 0; font: inherit; text-align: left; user-select: none;font-weight:bold;}'
+      '.Hoge{}.Hoge__button{padding:0;color:inherit;background-color:transparent;border:0;font:inherit;line-height:inherit;text-align:inherit;user-select:none;font-weight:bold;}'
     )
   )
 })
