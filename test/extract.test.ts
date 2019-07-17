@@ -165,3 +165,9 @@ test('24', () => {
   const output = extract(input)
   expect(output).toBe(format('.Hoge{}.Hoge>span{}'))
 })
+
+test('25', () => {
+  const input = '<div class="Hoge"><span style="display:block"></span></div>'
+  const output = extract(input)
+  expect(output).toBe(format('.Hoge{}.Hoge>span{display:block}'))
+})
