@@ -6,7 +6,7 @@
   },
   "devDependencies": {
     "css-scaffolder": "^0.4.0",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "webpack": "^4.35.3",
     "webpack-cli": "^3.3.6"
   }
