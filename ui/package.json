@@ -8,6 +8,6 @@
     "css-scaffolder": "^0.4.0",
     "jquery": "^3.4.1",
     "webpack": "^4.35.3",
-    "webpack-cli": "^3.3.6"
+    "webpack-cli": "^3.3.12"
   }
 }
